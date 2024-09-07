@@ -6,14 +6,33 @@ extern crate minifb;
 extern crate rand;
 
 use minifb::{Key, Window, WindowOptions};
-use rand::Rng;
+use shapes::circle::{CircleChain, CircularHelper};
 
 const WIDTH: usize = 800;
 const HEIGHT: usize = 600;
-const NUM_CIRCLES: usize = 10;
-const LINE_THICKNESS: f32 = 2.0; // Thickness of the circle outline
+const LINE_THICKNESS: f32 = 1.0; // Thickness of the circle outline
 
 fn main() {
+    let head = CircularHelper::new(400.0, 300.0, 10.0, 0.0);
+    let mut circle_chain = CircleChain::new(&head);
+    let circle1 = CircularHelper::new(460.0, 360.0, 30.0, 0.0);
+    let circle2 = CircularHelper::new(660.0, 300.0, 40.0, 0.0);
+    let circle3 = CircularHelper::new(660.0, 500.0, 20.0, 0.0);
+    let circle4 = CircularHelper::new(660.0, 200.0, 20.0, 0.0);
+    let circle5 = CircularHelper::new(660.0, 400.0, 10.0, 0.0);
+    let circle6 = CircularHelper::new(660.0, 600.0, 10.0, 0.0);
+    circle_chain.add_circle(&circle1);
+    circle_chain.add_circle(&circle2);
+    circle_chain.add_circle(&circle3);
+    circle_chain.add_circle(&circle4);
+    circle_chain.add_circle(&circle5);
+    circle_chain.add_circle(&circle6);
+    circle_chain.allign_circles();
+    println!("\nafter allign");
+    println!("{head:?}");
+    for circle in &circle_chain.circles {
+        println!("{circle:?}");
+    }
     let mut window = Window::new(
         "Draw Empty Circles - ESC to exit",
         WIDTH,
@@ -27,15 +46,22 @@ fn main() {
     let mut buffer: Vec<u32> = vec![0; WIDTH * HEIGHT];
 
     // Randomly generate circles' parameters
-    let mut rng = rand::thread_rng();
     let mut circles = Vec::new();
-    for _ in 0..NUM_CIRCLES {
-        let radius: f32 = rng.gen_range(20.0..100.0);
-        let center_x: f32 = rng.gen_range(radius..(WIDTH as f32 - radius));
-        let center_y: f32 = rng.gen_range(radius..(HEIGHT as f32 - radius));
+
+    circle_chain.move_head(0.0, -241.0);
+    circle_chain.allign_circles();
+
+    circles.push((
+        circle_chain.head.x as f32,
+        circle_chain.head.y as f32,
+        circle_chain.head.radius as f32,
+    ));
+    for ch in circle_chain.circles {
+        let radius: f32 = ch.radius as f32;
+        let center_x: f32 = ch.x as f32;
+        let center_y: f32 = ch.y as f32;
         circles.push((center_x, center_y, radius));
     }
-
     // Draw the circle outlines
     for (center_x, center_y, radius) in &circles {
         for y in 0..HEIGHT {
@@ -47,7 +73,7 @@ fn main() {
                 // Check if the pixel is within the outline range
                 if (distance >= *radius - LINE_THICKNESS) && (distance <= *radius + LINE_THICKNESS)
                 {
-                    buffer[y * WIDTH + x] = 0xFFFFFF; // White color for the circle outline
+                    buffer[y * WIDTH + x] = 0xAAAAAA; // White color for the circle outline
                 }
             }
         }
