@@ -22,13 +22,12 @@ impl Clone for CircularHelper {
 }
 
 impl CircularHelper {
-    pub fn allign_to(&mut self, ref_circle: CircularHelper) -> CircularHelper {
+    pub fn allign_nodes(&mut self, ref_circle: CircularHelper, dist: f64) -> CircularHelper {
         let dx: f64 = self.x - ref_circle.x;
         let dy: f64 = self.y - ref_circle.y;
         let direction = calculate_angle_radians(dx, dy); // Compute the angle in radians
-        let both_r = self.radius + ref_circle.radius;
-        let tx = both_r * direction.cos();
-        let ty = both_r * direction.sin();
+        let tx = dist * direction.cos();
+        let ty = dist * direction.sin();
         self.x = ref_circle.x + tx;
         self.y = ref_circle.y + ty;
         self.direction = direction;
@@ -52,6 +51,7 @@ impl CircularHelper {
 #[derive(Debug)]
 pub struct CircleChain {
     pub head: CircularHelper,
+    pub distance: f64,
     pub circles: Vec<CircularHelper>,
     pub is_visible_circles: bool,
     pub is_visible_contour: bool,
@@ -60,9 +60,10 @@ pub struct CircleChain {
 }
 
 impl CircleChain {
-    pub fn new(head: &CircularHelper) -> CircleChain {
+    pub fn new(head: &CircularHelper, dist: f64) -> CircleChain {
         CircleChain {
             head: head.clone(),
+            distance: dist,
             circles: Vec::new(),
             is_visible_circles: true,
             is_visible_contour: true,
@@ -78,18 +79,18 @@ impl CircleChain {
         self.head.y += y;
     }
 
-    pub fn allign_circles(&mut self) {
+    pub fn allign_nodes(&mut self) {
         if self.circles.is_empty() {
             return;
         }
         let mut new_chain_vec = Vec::new();
         let mut new_circle = self.circles[0].clone();
-        new_circle.allign_to(self.head.clone());
+        new_circle.allign_nodes(self.head.clone(), self.distance);
         new_chain_vec.push(new_circle);
         if self.circles.len() > 1 {
             for i in 1..self.circles.len() {
                 let mut new_circle = self.circles[i].clone();
-                new_circle.allign_to(new_chain_vec[i - 1].clone());
+                new_circle.allign_nodes(new_chain_vec[i - 1].clone(), self.distance);
                 new_chain_vec.push(new_circle);
             }
         }
