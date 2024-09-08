@@ -87,6 +87,11 @@ impl CircleChain {
         self.circles[0].y += y;
     }
 
+    pub fn position_head(&mut self, x: f64, y: f64) {
+        self.circles[0].x = x;
+        self.circles[0].y = y;
+    }
+
     pub fn allign_nodes(&mut self) {
         if self.circles.is_empty() {
             return;
