@@ -13,14 +13,14 @@ const HEIGHT: usize = 600;
 const LINE_THICKNESS: f32 = 1.0; // Thickness of the circle outline
 
 fn main() {
-    let head = CircularHelper::new(400.0, 300.0, 10.0, 0.0);
+    let head = CircularHelper::new(600.0, 550.0, 10.0, 0.0);
     let mut circle_chain = CircleChain::new(&head, 40.0);
-    let circle1 = CircularHelper::new(460.0, 360.0, 15.0, 0.0);
-    let circle2 = CircularHelper::new(660.0, 300.0, 20.0, 0.0);
-    let circle3 = CircularHelper::new(660.0, 500.0, 10.0, 0.0);
-    let circle4 = CircularHelper::new(660.0, 200.0, 10.0, 0.0);
+    let circle1 = CircularHelper::new(460.0, 560.0, 15.0, 0.0);
+    let circle2 = CircularHelper::new(660.0, 520.0, 20.0, 0.0);
+    let circle3 = CircularHelper::new(660.0, 450.0, 10.0, 0.0);
+    let circle4 = CircularHelper::new(660.0, 450.0, 10.0, 0.0);
     let circle5 = CircularHelper::new(660.0, 400.0, 5.0, 0.0);
-    let circle6 = CircularHelper::new(660.0, 600.0, 5.0, 0.0);
+    let circle6 = CircularHelper::new(660.0, 400.0, 5.0, 0.0);
     circle_chain.add_circle(&circle1);
     circle_chain.add_circle(&circle2);
     circle_chain.add_circle(&circle3);
@@ -43,7 +43,35 @@ fn main() {
 
     // Randomly generate circles' parameters
     let mut circles = Vec::new();
-    circle_chain.move_head(-80.0, -61.0);
+    circle_chain.move_head(-150.0, -20.0);
+    circle_chain.allign_nodes();
+
+    circles.push((
+        circle_chain.head.x as f32,
+        circle_chain.head.y as f32,
+        circle_chain.head.radius as f32,
+    ));
+    for ch in &circle_chain.circles {
+        let radius: f32 = ch.radius as f32;
+        let center_x: f32 = ch.x as f32;
+        let center_y: f32 = ch.y as f32;
+        circles.push((center_x, center_y, radius));
+    }
+    circle_chain.move_head(-250.0, -80.0);
+    circle_chain.allign_nodes();
+
+    circles.push((
+        circle_chain.head.x as f32,
+        circle_chain.head.y as f32,
+        circle_chain.head.radius as f32,
+    ));
+    for ch in &circle_chain.circles {
+        let radius: f32 = ch.radius as f32;
+        let center_x: f32 = ch.x as f32;
+        let center_y: f32 = ch.y as f32;
+        circles.push((center_x, center_y, radius));
+    }
+    circle_chain.move_head(40.0, -161.0);
     circle_chain.allign_nodes();
 
     circles.push((
@@ -58,7 +86,7 @@ fn main() {
         circles.push((center_x, center_y, radius));
     }
 
-    circle_chain.move_head(0.0, -181.0);
+    circle_chain.move_head(200.0, -181.0);
     circle_chain.allign_nodes();
     circles.push((
         circle_chain.head.x as f32,
