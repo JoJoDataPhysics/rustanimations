@@ -31,6 +31,7 @@ impl CircularNode {
         self.x = ref_circle.x + tx;
         self.y = ref_circle.y + ty;
         self.direction = direction;
+
         CircularNode {
             x: ref_circle.x + tx,
             y: ref_circle.y + ty,
@@ -59,6 +60,19 @@ pub struct CircleChain {
 }
 
 impl CircleChain {
+    fn update(&mut self, index: usize, new_circle: CircularNode) -> Result<(), String> {
+        if index < self.circles.len() {
+            self.circles[index] = new_circle;
+            Ok(())
+        } else {
+            Err(format!("Index {} out of bounds", index))
+        }
+    }
+
+    fn get(&self, index: usize) -> Option<&CircularNode> {
+        self.circles.get(index)
+    }
+
     pub fn new(head: &CircularNode, dist: f64) -> Self {
         CircleChain {
             distance: dist,
