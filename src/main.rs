@@ -6,21 +6,21 @@ extern crate minifb;
 extern crate rand;
 
 use minifb::{Key, Window, WindowOptions};
-use shapes::circle::{CircleChain, CircularHelper};
+use shapes::circle::{CircleChain, CircularNode};
 
 const WIDTH: usize = 800;
 const HEIGHT: usize = 600;
 const LINE_THICKNESS: f32 = 1.0; // Thickness of the circle outline
 
 fn main() {
-    let head = CircularHelper::new(600.0, 550.0, 10.0, 0.0);
+    let head = CircularNode::new(600.0, 550.0, 10.0, 0.0);
     let mut circle_chain = CircleChain::new(&head, 40.0);
-    let circle1 = CircularHelper::new(460.0, 560.0, 15.0, 0.0);
-    let circle2 = CircularHelper::new(660.0, 520.0, 20.0, 0.0);
-    let circle3 = CircularHelper::new(660.0, 450.0, 10.0, 0.0);
-    let circle4 = CircularHelper::new(660.0, 450.0, 10.0, 0.0);
-    let circle5 = CircularHelper::new(660.0, 400.0, 5.0, 0.0);
-    let circle6 = CircularHelper::new(660.0, 400.0, 5.0, 0.0);
+    let circle1 = CircularNode::new(460.0, 560.0, 15.0, 0.0);
+    let circle2 = CircularNode::new(660.0, 520.0, 20.0, 0.0);
+    let circle3 = CircularNode::new(660.0, 450.0, 10.0, 0.0);
+    let circle4 = CircularNode::new(660.0, 450.0, 10.0, 0.0);
+    let circle5 = CircularNode::new(660.0, 400.0, 5.0, 0.0);
+    let circle6 = CircularNode::new(660.0, 400.0, 5.0, 0.0);
     circle_chain.add_circle(&circle1);
     circle_chain.add_circle(&circle2);
     circle_chain.add_circle(&circle3);

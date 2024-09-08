@@ -3,16 +3,16 @@ fn calculate_angle_radians(x: f64, y: f64) -> f64 {
 }
 
 #[derive(Debug)]
-pub struct CircularHelper {
+pub struct CircularNode {
     pub x: f64,
     pub y: f64,
     pub radius: f64,
     pub direction: f64,
 }
 
-impl Clone for CircularHelper {
-    fn clone(&self) -> CircularHelper {
-        CircularHelper {
+impl Clone for CircularNode {
+    fn clone(&self) -> CircularNode {
+        CircularNode {
             x: self.x,
             y: self.y,
             radius: self.radius,
@@ -21,8 +21,8 @@ impl Clone for CircularHelper {
     }
 }
 
-impl CircularHelper {
-    pub fn allign_nodes(&mut self, ref_circle: CircularHelper, dist: f64) -> CircularHelper {
+impl CircularNode {
+    pub fn allign_nodes(&mut self, ref_circle: CircularNode, dist: f64) -> CircularNode {
         let dx: f64 = self.x - ref_circle.x;
         let dy: f64 = self.y - ref_circle.y;
         let direction = calculate_angle_radians(dx, dy); // Compute the angle in radians
@@ -31,15 +31,15 @@ impl CircularHelper {
         self.x = ref_circle.x + tx;
         self.y = ref_circle.y + ty;
         self.direction = direction;
-        CircularHelper {
+        CircularNode {
             x: ref_circle.x + tx,
             y: ref_circle.y + ty,
             radius: self.radius,
             direction,
         }
     }
-    pub fn new(x: f64, y: f64, radius: f64, direction: f64) -> CircularHelper {
-        CircularHelper {
+    pub fn new(x: f64, y: f64, radius: f64, direction: f64) -> CircularNode {
+        CircularNode {
             x,
             y,
             radius,
@@ -50,9 +50,9 @@ impl CircularHelper {
 
 #[derive(Debug)]
 pub struct CircleChain {
-    pub head: CircularHelper,
+    pub head: CircularNode,
     pub distance: f64,
-    pub circles: Vec<CircularHelper>,
+    pub circles: Vec<CircularNode>,
     pub is_visible_circles: bool,
     pub is_visible_contour: bool,
     pub is_visible_centers: bool,
@@ -60,7 +60,7 @@ pub struct CircleChain {
 }
 
 impl CircleChain {
-    pub fn new(head: &CircularHelper, dist: f64) -> CircleChain {
+    pub fn new(head: &CircularNode, dist: f64) -> CircleChain {
         CircleChain {
             head: head.clone(),
             distance: dist,
@@ -71,7 +71,7 @@ impl CircleChain {
             is_visible_contour_dots: true,
         }
     }
-    pub fn add_circle(&mut self, circle: &CircularHelper) {
+    pub fn add_circle(&mut self, circle: &CircularNode) {
         self.circles.push(circle.clone());
     }
     pub fn move_head(&mut self, x: f64, y: f64) {
