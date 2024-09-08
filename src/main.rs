@@ -34,8 +34,8 @@ struct AnimatedChain {
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
     let mut rng = rand::thread_rng();
-    for _ in 0..4 {
-        let orbit_radius = rng.gen_range(50.0..200.0);
+    for _ in 0..10 {
+        let orbit_radius = rng.gen_range(150.0..300.0);
         let speed = rng.gen_range(1.0..3.0);
         let orbit_center = Vec2::new(rng.gen_range(-200.0..200.0), rng.gen_range(-200.0..200.0));
         let circle_chain = seven_chain();
@@ -61,7 +61,7 @@ fn animate_circles(
     for (mut transform, mut chain) in &mut query {
         chain.angle += chain.speed * time.delta_seconds();
 
-        let x = chain.orbit_center.x + chain.orbit_radius * chain.angle.cos();
+        let x = 1.5 * chain.orbit_center.x + chain.orbit_radius * chain.angle.cos();
         let y = chain.orbit_center.y + chain.orbit_radius * chain.angle.sin();
 
         chain.circle_chain.position_head(x as f64, y as f64);
