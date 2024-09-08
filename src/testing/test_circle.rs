@@ -31,9 +31,10 @@ pub fn test_circle_chain() {
     for circle in &circle_chain.circles {
         println!("{circle:?}");
     }
+
     circle_chain.move_head(11.0, 11.0);
     println!("\nafter move_head");
-    println!("{0:?}", circle_chain.head);
+    println!("{0:?}", circle_chain.circles[0]);
     circle_chain.allign_nodes();
     for circle in &circle_chain.circles {
         println!("{circle:?}");

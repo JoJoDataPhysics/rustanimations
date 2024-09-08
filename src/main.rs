@@ -7,12 +7,15 @@ extern crate rand;
 
 use minifb::{Key, Window, WindowOptions};
 use shapes::circle::{CircleChain, CircularNode};
+use testing::test_circle::{test_circle, test_circle_chain};
 
 const WIDTH: usize = 800;
 const HEIGHT: usize = 600;
 const LINE_THICKNESS: f32 = 1.0; // Thickness of the circle outline
 
 fn main() {
+    test_circle();
+    test_circle_chain();
     let head = CircularNode::new(600.0, 550.0, 10.0, 0.0);
     let mut circle_chain = CircleChain::new(&head, 40.0);
     let circle1 = CircularNode::new(460.0, 560.0, 15.0, 0.0);
@@ -47,9 +50,9 @@ fn main() {
     circle_chain.allign_nodes();
 
     circles.push((
-        circle_chain.head.x as f32,
-        circle_chain.head.y as f32,
-        circle_chain.head.radius as f32,
+        circle_chain.circles[0].x as f32,
+        circle_chain.circles[0].y as f32,
+        circle_chain.circles[0].radius as f32,
     ));
     for ch in &circle_chain.circles {
         let radius: f32 = ch.radius as f32;
@@ -61,9 +64,9 @@ fn main() {
     circle_chain.allign_nodes();
 
     circles.push((
-        circle_chain.head.x as f32,
-        circle_chain.head.y as f32,
-        circle_chain.head.radius as f32,
+        circle_chain.circles[0].x as f32,
+        circle_chain.circles[0].y as f32,
+        circle_chain.circles[0].radius as f32,
     ));
     for ch in &circle_chain.circles {
         let radius: f32 = ch.radius as f32;
@@ -75,9 +78,9 @@ fn main() {
     circle_chain.allign_nodes();
 
     circles.push((
-        circle_chain.head.x as f32,
-        circle_chain.head.y as f32,
-        circle_chain.head.radius as f32,
+        circle_chain.circles[0].x as f32,
+        circle_chain.circles[0].y as f32,
+        circle_chain.circles[0].radius as f32,
     ));
     for ch in &circle_chain.circles {
         let radius: f32 = ch.radius as f32;
@@ -89,9 +92,9 @@ fn main() {
     circle_chain.move_head(200.0, -181.0);
     circle_chain.allign_nodes();
     circles.push((
-        circle_chain.head.x as f32,
-        circle_chain.head.y as f32,
-        circle_chain.head.radius as f32,
+        circle_chain.circles[0].x as f32,
+        circle_chain.circles[0].y as f32,
+        circle_chain.circles[0].radius as f32,
     ));
 
     // Draw the circle outlines
