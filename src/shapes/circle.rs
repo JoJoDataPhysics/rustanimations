@@ -22,7 +22,7 @@ impl Clone for CircularNode {
 }
 
 impl CircularNode {
-    pub fn allign_nodes(&mut self, ref_circle: CircularNode, dist: f64) -> CircularNode {
+    pub fn allign_nodes(&mut self, ref_circle: &CircularNode, dist: f64) -> CircularNode {
         let dx: f64 = self.x - ref_circle.x;
         let dy: f64 = self.y - ref_circle.y;
         let direction = calculate_angle_radians(dx, dy); // Compute the angle in radians
@@ -95,15 +95,14 @@ impl CircleChain {
         if self.circles.is_empty() {
             return;
         }
-        let mut new_chain_vec: Vec<CircularNode> = Vec::new();
-        new_chain_vec.push(self.circles[0].clone());
+
         if self.circles.len() > 1 {
             for i in 1..self.circles.len() {
-                let mut new_circle: CircularNode = self.circles[i].clone();
-                new_circle.allign_nodes(new_chain_vec[i - 1].clone(), self.distance);
-                new_chain_vec.push(new_circle);
+                let mut new_circle = self.circles[i].clone();
+                let prev_circle = self.circles[i - 1].clone();
+                new_circle.allign_nodes(&prev_circle, self.distance);
+                self.update(i, new_circle).unwrap();
             }
         }
-        self.circles = new_chain_vec;
     }
 }
