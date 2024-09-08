@@ -69,10 +69,6 @@ impl CircleChain {
         }
     }
 
-    fn get(&self, index: usize) -> Option<&CircularNode> {
-        self.circles.get(index)
-    }
-
     pub fn new(head: &CircularNode, dist: f64) -> Self {
         CircleChain {
             distance: dist,

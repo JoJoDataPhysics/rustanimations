@@ -11,6 +11,12 @@ pub fn test_circle() {
 
 pub fn test_circle_chain() {
     let mut seven_chain = seven_chain();
+    println!("test_circle_chain");
+    println!("{0:?}", seven_chain.is_visible_circles);
+    println!("{0:?}", seven_chain.is_visible_contour);
+    println!("{0:?}", seven_chain.is_visible_centers);
+    println!("{0:?}", seven_chain.is_visible_contour_dots);
+
     println!("\ncurrent state");
     println!("{0:?}", seven_chain.circles[0]);
     for circle in &seven_chain.circles {
