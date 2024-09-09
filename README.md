@@ -3,59 +3,62 @@
 
 ## Project Overview
 
-This Rust project is a graphical simulation built using the [Bevy game engine](https://bevyengine.org/) and the [rand crate](https://docs.rs/rand/latest/rand/). The project demonstrates the movement of circular chains and the visualization of different elements (like nodes, indices, and contour dots) as they orbit around a central point. The animation is created using Bevy's entity-component-system (ECS) and Bevy's real-time rendering capabilities.
+This Rust project provides functionality for simulating and manipulating circular chains of nodes in a 2D space. Each circular node has properties like position, radius, and direction, and can be aligned with other nodes to create chains. The project is built using Rust's standard libraries along with the [Bevy game engine](https://bevyengine.org/) for rendering and animation, and the [rand crate](https://docs.rs/rand/latest/rand/) for generating random values. This simulation includes the ability to create circular chains, position and align nodes, and visualize them.
 
-The main components of the project are:
+The project also includes a `ContourNode` system, which allows the generation of a contour made up of nodes, and uses Bevy's rendering capabilities to animate and display various elements, such as circles and contour points.
 
-- **`mod movements`**: Contains the logic for animating circular objects and orchestrating their motion.
-- **`mod shapes`**: Defines different geometric shapes, such as circular chains, and how these shapes are constructed, aligned, and displayed.
-- **`mod testing`**: Provides testing utilities for verifying the behavior of circular chains and contours.
+### Key Features:
+- **Circular Nodes**: Each node represents a circle in 2D space, with adjustable properties such as radius and direction.
+- **Circle Chains**: Multiple nodes can be linked into a chain, allowing you to align and move the nodes together.
+- **Visualization**: Using Bevy’s rendering system, the project animates circular nodes and chains with customizable visibility options for circles, nodes, indices, and contour dots.
+- **Contouring**: The project supports contour generation for defining special geometric relationships between nodes.
 
 ## Project Structure
 
 ### Modules
 
-- **`mod movements`**: Handles the movement logic for animated shapes, such as orbiting around a central point.
-- **`mod shapes`**: Defines the geometric structures like circular chains and contours. The key sub-modules in `shapes` are:
-  - `circle`: Contains the `CircleChain` struct for managing a chain of connected circles.
-  - `combi_shapes`: Contains utility functions like `seven_chain()` for creating specific combinations of shapes.
-  - `contour`: Defines structures like `seven_node_contour()` for node-based shapes.
-- **`mod testing`**: Contains test functions to verify that circles, chains, and contours are behaving as expected.
+1. **CircularNode**: Defines a circular node with properties such as position, radius, and direction. Includes methods for creating and aligning nodes.
+2. **CircleChain**: Handles the logic of managing a chain of circular nodes, with functions for adding, moving, and aligning nodes in the chain.
+3. **ContourNode**: Represents contour points that interact with circular chains, allowing for more complex geometric shapes.
+4. **Testing**: Functions like `test_circle`, `test_circle_chain`, and `test_contour` are provided to validate the behavior of nodes and chains.
 
-### Key Functions
+### Core Components
 
-- **`test_circle()`**: Runs a test to verify the behavior of a single circle.
-- **`test_circle_chain()`**: Tests the creation and alignment of a chain of circles.
-- **`test_contour()`**: Tests the creation and positioning of contour nodes.
+- **`CircularNode`**: A structure that represents a circle in 2D space, with properties like position `(x, y)`, radius, and direction (angle in radians). Key methods include:
+  - **`allign_nodes`**: Aligns one circular node relative to a reference node at a specified distance.
+  - **`new`**: Creates a new circular node.
 
-### `main()` Function
+- **`CircleChain`**: A collection of circular nodes connected in a chain. Key methods include:
+  - **`new`**: Creates a new circle chain with a specified head node and distance between nodes.
+  - **`add_circle`**: Adds a new circular node to the chain.
+  - **`move_head`**: Moves the head of the chain by a specified offset.
+  - **`position_head`**: Repositions the head of the chain at a specific coordinate.
+  - **`allign_nodes`**: Aligns all the nodes in the chain based on the head node.
 
-The main entry point of the program, responsible for:
+- **`seven_chain`**: A utility function that creates a specific chain of seven circular nodes, used to demonstrate chaining and alignment.
 
-1. Running the tests (`test_circle()`, `test_circle_chain()`, and `test_contour()`).
-2. Initializing the Bevy app.
-3. Spawning entities like the camera and animated circular chains in the 2D space.
-4. Defining systems that run in the Bevy ECS loop, including the `animate_circles` system for animating the circular chains.
+- **`ContourNode`**: Defines nodes that represent a contour, with methods to generate a specific seven-node contour.
 
-### Animation Logic
+## Animation and Visualization
 
-The `animate_circles()` system is responsible for:
+The project uses Bevy’s `App` system to animate the circular chains, positioning them in an orbit around a central point and rendering them with customizable visual elements. Bevy's ECS (Entity Component System) manages the behavior of the animated chains, and `Gizmos` are used to visualize the nodes, circles, and other elements.
 
-- Calculating the updated position of each circle in the chain.
-- Rendering circles, nodes, and other indicators (like contour dots).
-- Orbiting the circles around a central point and aligning them based on their respective angles and radii.
+Key Bevy Systems:
+
+- **`setup()`**: Initializes the Bevy app, spawns a 2D camera, and generates multiple circular chains.
+- **`animate_circles()`**: This system updates the position and orientation of each circle in the chain and renders them using Bevy’s gizmo system.
 
 ## Setup and Requirements
 
 ### Prerequisites
 
-- **Rust**: Ensure you have Rust installed. You can download and install it from [rust-lang.org](https://www.rust-lang.org/).
-- **Bevy**: This project relies on Bevy for game engine features. Bevy and its dependencies are included via `Cargo.toml`.
-- **Rand**: The `rand` crate is used for generating random values, such as circle speed and orbit radius.
+- **Rust**: Make sure to have Rust installed. You can install it from [rust-lang.org](https://www.rust-lang.org/).
+- **Bevy**: This project depends on the Bevy game engine. Bevy and other dependencies are managed through Cargo.
+- **Rand**: The `rand` crate is used for generating random numbers in the animation.
 
 ### Installing Dependencies
 
-After cloning the repository, run the following command to fetch and install dependencies:
+To install the necessary dependencies for this project, run the following command:
 
 ```bash
 cargo build
@@ -63,31 +66,34 @@ cargo build
 
 ### Running the Project
 
-To run the project, execute the following command:
+To run the project and view the animated circular chains in action, execute the following command:
 
 ```bash
 cargo run
 ```
 
-This will start the application and display the animated circular chains in a 2D window.
+This will start the application, and a window will open displaying the animated chains in 2D space.
 
 ### Testing
 
-The testing functions are called in the `main()` function, and the results will be outputted to the console when the application starts. These test the behavior of circular shapes and chains, ensuring correct alignment and positioning.
+The project includes several test functions that validate the behavior of individual circular nodes and chains. These tests are invoked in the `main()` function and their output is printed to the console.
 
-## Customization
+- **`test_circle()`**: Tests the behavior of aligning a single circular node with respect to a reference node.
+- **`test_circle_chain()`**: Tests the creation, alignment, and movement of a chain of circles.
 
-- You can customize the number of animated circular chains by modifying the `for _ in 0..10` loop in the `setup()` function.
-- Modify the visualization by adjusting visibility flags in `CircleChain` (e.g., `is_visible_circles`, `is_visible_nodes`, `is_visible_contour_dots`, etc.).
-  
+### Customization
+
+- **Change Node Visibility**: The visibility of circles, nodes, indices, and contour dots in the chain can be customized by modifying the boolean flags in `CircleChain`, such as `is_visible_circles`, `is_visible_nodes`, and so on.
+- **Orbit Configuration**: You can adjust the number of chains, speed, and orbit radius by modifying the random values generated in the `setup()` function.
+
 ## License
 
-This project is open-source and available under the MIT License.
+This project is licensed under the MIT License.
 
 ## Contributing
 
-Feel free to open issues or submit pull requests to improve the functionality, performance, or features of this project.
+Feel free to open issues or submit pull requests if you'd like to improve this project. Contributions for performance improvements, feature extensions, or bug fixes are always welcome.
 
 ---
 
-Enjoy experimenting with geometric shapes and animations!
+Enjoy exploring and experimenting with circular nodes, chains, and contours in this 2D space simulation!
