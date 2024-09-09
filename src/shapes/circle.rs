@@ -1,3 +1,4 @@
+use std::f64::consts::PI;
 fn calculate_angle_radians(x: f64, y: f64) -> f64 {
     y.atan2(x) // Compute the angle in radians
 }
@@ -30,7 +31,7 @@ impl CircularNode {
         let ty = dist * direction.sin();
         self.x = ref_circle.x + tx;
         self.y = ref_circle.y + ty;
-        self.direction = direction;
+        self.direction = PI + direction;
 
         CircularNode {
             x: ref_circle.x + tx,
@@ -88,8 +89,11 @@ impl CircleChain {
     }
 
     pub fn position_head(&mut self, x: f64, y: f64) {
+        let dx = self.circles[0].x - x;
+        let dy = self.circles[0].y - y;
         self.circles[0].x = x;
         self.circles[0].y = y;
+        self.circles[0].direction = PI + calculate_angle_radians(dx, dy);
     }
 
     pub fn allign_nodes(&mut self) {

@@ -68,10 +68,27 @@ fn animate_circles(
         chain.circle_chain.allign_nodes();
         for circle in &chain.circle_chain.circles {
             transform.translation = Vec3::new(circle.x as f32, circle.y as f32, 0.0);
+            let radius = circle.radius as f32;
+            let angle = circle.direction as f32;
             gizmos.circle_2d(
                 transform.translation.truncate(),
-                circle.radius as f32,
-                Color::hsla(circle.direction as f32, 0.8, 0.8, 1.0),
+                radius,
+                Color::rgb(0.4, 0.4, 1.0),
+            );
+
+            gizmos.circle_2d(
+                transform.translation.truncate(),
+                2.0,
+                Color::rgb(0.9, 0.1, 0.1),
+            );
+
+            let index_x = circle.x as f32 + radius * angle.cos();
+            let index_y = circle.y as f32 + radius * angle.sin();
+            transform.translation = Vec3::new(index_x, index_y, 0.0);
+            gizmos.circle_2d(
+                transform.translation.truncate(),
+                2.0,
+                Color::rgb(0.1, 0.9, 0.1),
             );
         }
     }
