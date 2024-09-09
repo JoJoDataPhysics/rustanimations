@@ -1,5 +1,15 @@
 use crate::shapes::circle::CircularNode;
 use crate::shapes::combi_shapes::seven_chain;
+use crate::shapes::countour::seven_node_contour;
+
+pub fn test_contour() {
+    let contour_nodes = seven_node_contour();
+    println!("test_contour");
+    for contour_node in contour_nodes {
+        println!("{contour_node:?}");
+    }
+}
+
 pub fn test_circle() {
     let mut circle = CircularNode::new(2.0, 2.0, 1.0, 0.0);
     let ref_circle = CircularNode::new(0.0, 0.0, 1.0, 0.0);
@@ -14,7 +24,7 @@ pub fn test_circle_chain() {
     println!("test_circle_chain");
     println!("{0:?}", seven_chain.is_visible_circles);
     println!("{0:?}", seven_chain.is_visible_contour);
-    println!("{0:?}", seven_chain.is_visible_centers);
+    println!("{0:?}", seven_chain.is_visible_nodes);
     println!("{0:?}", seven_chain.is_visible_contour_dots);
 
     println!("\ncurrent state");

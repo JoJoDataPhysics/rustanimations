@@ -56,7 +56,8 @@ pub struct CircleChain {
     pub circles: Vec<CircularNode>,
     pub is_visible_circles: bool,
     pub is_visible_contour: bool,
-    pub is_visible_centers: bool,
+    pub is_visible_nodes: bool,
+    pub is_visible_indizes: bool,
     pub is_visible_contour_dots: bool,
 }
 
@@ -76,8 +77,9 @@ impl CircleChain {
             circles: vec![head.clone()],
             is_visible_circles: true,
             is_visible_contour: true,
-            is_visible_centers: true,
+            is_visible_nodes: true,
             is_visible_contour_dots: true,
+            is_visible_indizes: true,
         }
     }
     pub fn add_circle(&mut self, circle: &CircularNode) {

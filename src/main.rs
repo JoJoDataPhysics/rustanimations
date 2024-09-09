@@ -9,11 +9,13 @@ use rand::Rng;
 
 use shapes::circle::CircleChain;
 use shapes::combi_shapes::seven_chain;
-use testing::test_circle::{test_circle, test_circle_chain};
+use shapes::countour::seven_node_contour;
+use testing::test_circle::{test_circle, test_circle_chain, test_contour};
 
 fn main() {
     test_circle();
     test_circle_chain();
+    test_contour();
 
     App::new()
         .add_plugins(DefaultPlugins)
@@ -70,26 +72,59 @@ fn animate_circles(
             transform.translation = Vec3::new(circle.x as f32, circle.y as f32, 0.0);
             let radius = circle.radius as f32;
             let angle = circle.direction as f32;
-            gizmos.circle_2d(
-                transform.translation.truncate(),
-                radius,
-                Color::rgb(0.4, 0.4, 1.0),
-            );
 
-            gizmos.circle_2d(
-                transform.translation.truncate(),
-                2.0,
-                Color::rgb(0.9, 0.1, 0.1),
-            );
+            if chain.circle_chain.is_visible_circles {
+                gizmos.circle_2d(
+                    transform.translation.truncate(),
+                    radius,
+                    Color::rgb(0.1, 0.1, 0.9),
+                );
+            }
+
+            if chain.circle_chain.is_visible_nodes {
+                let center_radius = 1.0;
+                gizmos.circle_2d(
+                    transform.translation.truncate(),
+                    center_radius,
+                    Color::rgb(0.9, 0.1, 0.1),
+                );
+            }
 
             let index_x = circle.x as f32 + radius * angle.cos();
             let index_y = circle.y as f32 + radius * angle.sin();
             transform.translation = Vec3::new(index_x, index_y, 0.0);
-            gizmos.circle_2d(
-                transform.translation.truncate(),
-                2.0,
-                Color::rgb(0.1, 0.9, 0.1),
-            );
+
+            if chain.circle_chain.is_visible_indizes {
+                let radius = circle.radius as f32;
+                let angle = circle.direction as f32;
+                let index_x = circle.x as f32 + radius * angle.cos();
+                let index_y = circle.y as f32 + radius * angle.sin();
+                transform.translation = Vec3::new(index_x, index_y, 0.0);
+                gizmos.circle_2d(
+                    transform.translation.truncate(),
+                    2.0,
+                    Color::rgb(0.1, 0.9, 0.1),
+                );
+            }
+        }
+        if chain.circle_chain.is_visible_contour_dots {
+            for contour_node in seven_node_contour() {
+                let node_index = contour_node.center_node_index;
+                let index_angle = chain.circle_chain.circles[node_index].direction;
+                let rel_angle = contour_node.angle;
+                let angle = (index_angle + rel_angle) as f32;
+                let center_x = chain.circle_chain.circles[node_index].x as f32;
+                let center_y = chain.circle_chain.circles[node_index].y as f32;
+                let radius = chain.circle_chain.circles[node_index].radius as f32;
+                let x = center_x + radius * angle.cos();
+                let y = center_y + radius * angle.sin();
+                transform.translation = Vec3::new(x, y, 0.0);
+                gizmos.circle_2d(
+                    transform.translation.truncate(),
+                    1.0,
+                    Color::rgb(0.1, 0.9, 0.1),
+                );
+            }
         }
     }
 }
