@@ -59,6 +59,7 @@ pub struct CircleChain {
     pub is_visible_nodes: bool,
     pub is_visible_indizes: bool,
     pub is_visible_contour_dots: bool,
+    pub is_visible_sceleton: bool,
 }
 
 impl CircleChain {
@@ -80,6 +81,7 @@ impl CircleChain {
             is_visible_nodes: true,
             is_visible_contour_dots: true,
             is_visible_indizes: true,
+            is_visible_sceleton: true,
         }
     }
     pub fn add_circle(&mut self, circle: &CircularNode) {

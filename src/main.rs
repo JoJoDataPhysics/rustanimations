@@ -68,6 +68,39 @@ fn animate_circles(
 
         chain.circle_chain.position_head(x as f64, y as f64);
         chain.circle_chain.allign_nodes();
+        if chain.circle_chain.is_visible_sceleton {
+            for i in 0..chain.circle_chain.circles.len() - 1 {
+                let node = &chain.circle_chain.circles[i];
+                let next_node = &chain.circle_chain.circles[i + 1];
+                gizmos.line_2d(
+                    Vec2::new(node.x as f32, node.y as f32),
+                    Vec2::new(next_node.x as f32, next_node.y as f32),
+                    Color::rgb(0.9, 0.1, 0.9),
+                );
+            }
+        }
+        if chain.circle_chain.is_visible_contour {
+            let mut contour_nodes = Vec::new();
+            for node in seven_node_contour() {
+                let node_index = node.center_node_index;
+                let index_angle = chain.circle_chain.circles[node_index].direction;
+                let rel_angle = node.angle;
+                let angle = (index_angle + rel_angle) as f32;
+                let center_x = chain.circle_chain.circles[node_index].x as f32;
+                let center_y = chain.circle_chain.circles[node_index].y as f32;
+                let radius = chain.circle_chain.circles[node_index].radius as f32;
+                let x = center_x + radius * angle.cos();
+                let y = center_y + radius * angle.sin();
+                contour_nodes.push(Vec2::new(x, y));
+            }
+            for i in 0..contour_nodes.len() {
+                gizmos.line_2d(
+                    contour_nodes[i],
+                    contour_nodes[(i + 1) % contour_nodes.len()],
+                    Color::rgb(0.0, 0.0, 0.5),
+                );
+            }
+        }
         for circle in &chain.circle_chain.circles {
             transform.translation = Vec3::new(circle.x as f32, circle.y as f32, 0.0);
             let radius = circle.radius as f32;
