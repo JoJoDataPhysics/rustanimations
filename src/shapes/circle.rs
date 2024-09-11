@@ -1,14 +1,14 @@
-use std::f64::consts::PI;
-fn calculate_angle_radians(x: f64, y: f64) -> f64 {
+use std::f32::consts::PI;
+fn calculate_angle_radians(x: f32, y: f32) -> f32 {
     y.atan2(x) // Compute the angle in radians
 }
 
 #[derive(Debug)]
 pub struct CircularNode {
-    pub x: f64,
-    pub y: f64,
-    pub radius: f64,
-    pub direction: f64,
+    pub x: f32,
+    pub y: f32,
+    pub radius: f32,
+    pub direction: f32,
 }
 
 impl Clone for CircularNode {
@@ -23,9 +23,9 @@ impl Clone for CircularNode {
 }
 
 impl CircularNode {
-    pub fn allign_nodes(&mut self, ref_circle: &CircularNode, dist: f64) -> CircularNode {
-        let dx: f64 = self.x - ref_circle.x;
-        let dy: f64 = self.y - ref_circle.y;
+    pub fn allign_nodes(&mut self, ref_circle: &CircularNode, dist: f32) -> CircularNode {
+        let dx: f32 = self.x - ref_circle.x;
+        let dy: f32 = self.y - ref_circle.y;
         let direction = calculate_angle_radians(dx, dy); // Compute the angle in radians
         let tx = dist * direction.cos();
         let ty = dist * direction.sin();
@@ -40,7 +40,7 @@ impl CircularNode {
             direction,
         }
     }
-    pub fn new(x: f64, y: f64, radius: f64, direction: f64) -> CircularNode {
+    pub fn new(x: f32, y: f32, radius: f32, direction: f32) -> CircularNode {
         CircularNode {
             x,
             y,
@@ -52,7 +52,7 @@ impl CircularNode {
 
 #[derive(Debug)]
 pub struct CircleChain {
-    pub distance: f64,
+    pub distance: f32,
     pub circles: Vec<CircularNode>,
     pub is_visible_circles: bool,
     pub is_visible_contour: bool,
@@ -72,27 +72,27 @@ impl CircleChain {
         }
     }
 
-    pub fn new(head: &CircularNode, dist: f64) -> Self {
+    pub fn new(head: &CircularNode, dist: f32) -> Self {
         CircleChain {
             distance: dist,
             circles: vec![head.clone()],
-            is_visible_circles: true,
+            is_visible_circles: false,
             is_visible_contour: true,
             is_visible_nodes: true,
-            is_visible_contour_dots: true,
-            is_visible_indizes: true,
+            is_visible_contour_dots: false,
+            is_visible_indizes: false,
             is_visible_sceleton: true,
         }
     }
     pub fn add_circle(&mut self, circle: &CircularNode) {
         self.circles.push(circle.clone());
     }
-    pub fn move_head(&mut self, x: f64, y: f64) {
+    pub fn move_head(&mut self, x: f32, y: f32) {
         self.circles[0].x += x;
         self.circles[0].y += y;
     }
 
-    pub fn position_head(&mut self, x: f64, y: f64) {
+    pub fn position_head(&mut self, x: f32, y: f32) {
         let dx = self.circles[0].x - x;
         let dy = self.circles[0].y - y;
         self.circles[0].x = x;

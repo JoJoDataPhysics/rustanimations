@@ -1,9 +1,9 @@
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 #[derive(Debug)]
 pub struct ContourNode {
     pub center_node_index: usize,
-    pub angle: f64,
+    pub angle: f32,
 }
 
 pub fn seven_node_contour() -> Vec<ContourNode> {

@@ -10,12 +10,15 @@ use rand::Rng;
 use shapes::circle::CircleChain;
 use shapes::combi_shapes::seven_chain;
 use shapes::countour::seven_node_contour;
+use shapes::polynomial::get_supporting_point;
 use testing::test_circle::{test_circle, test_circle_chain, test_contour};
+use testing::test_polynomial::test_polynomial;
 
 fn main() {
     test_circle();
     test_circle_chain();
     test_contour();
+    test_polynomial();
 
     App::new()
         .add_plugins(DefaultPlugins)
@@ -66,15 +69,15 @@ fn animate_circles(
         let x = 1.5 * chain.orbit_center.x + chain.orbit_radius * chain.angle.cos();
         let y = chain.orbit_center.y + chain.orbit_radius * chain.angle.sin();
 
-        chain.circle_chain.position_head(x as f64, y as f64);
+        chain.circle_chain.position_head(x, y);
         chain.circle_chain.allign_nodes();
         if chain.circle_chain.is_visible_sceleton {
             for i in 0..chain.circle_chain.circles.len() - 1 {
                 let node = &chain.circle_chain.circles[i];
                 let next_node = &chain.circle_chain.circles[i + 1];
                 gizmos.line_2d(
-                    Vec2::new(node.x as f32, node.y as f32),
-                    Vec2::new(next_node.x as f32, next_node.y as f32),
+                    Vec2::new(node.x, node.y),
+                    Vec2::new(next_node.x, next_node.y),
                     Color::rgb(0.9, 0.1, 0.9),
                 );
             }
@@ -85,32 +88,51 @@ fn animate_circles(
                 let node_index = node.center_node_index;
                 let index_angle = chain.circle_chain.circles[node_index].direction;
                 let rel_angle = node.angle;
-                let angle = (index_angle + rel_angle) as f32;
-                let center_x = chain.circle_chain.circles[node_index].x as f32;
-                let center_y = chain.circle_chain.circles[node_index].y as f32;
-                let radius = chain.circle_chain.circles[node_index].radius as f32;
+                let angle = index_angle + rel_angle;
+                let center_x = chain.circle_chain.circles[node_index].x;
+                let center_y = chain.circle_chain.circles[node_index].y;
+                let radius = chain.circle_chain.circles[node_index].radius;
                 let x = center_x + radius * angle.cos();
                 let y = center_y + radius * angle.sin();
                 contour_nodes.push(Vec2::new(x, y));
             }
-            for i in 0..contour_nodes.len() {
-                gizmos.line_2d(
+            let mut contour = Vec::new();
+            let num_nodes = contour_nodes.len();
+            for i in 0..num_nodes {
+                contour.push(contour_nodes[i]);
+
+                contour.push(get_supporting_point(
                     contour_nodes[i],
-                    contour_nodes[(i + 1) % contour_nodes.len()],
+                    contour_nodes[(i + 1) % num_nodes],
+                    contour_nodes[(i + 2) % num_nodes],
+                    0.25,
+                ));
+                contour.push(get_supporting_point(
+                    contour_nodes[i],
+                    contour_nodes[(i + 1) % num_nodes],
+                    contour_nodes[(i + 2) % num_nodes],
+                    0.75,
+                ));
+            }
+
+            for i in 0..contour.len() {
+                gizmos.line_2d(
+                    contour[i],
+                    contour[(i + 1) % contour.len()],
                     Color::rgb(0.0, 0.0, 0.5),
                 );
             }
         }
         for circle in &chain.circle_chain.circles {
-            transform.translation = Vec3::new(circle.x as f32, circle.y as f32, 0.0);
-            let radius = circle.radius as f32;
-            let angle = circle.direction as f32;
+            transform.translation = Vec3::new(circle.x, circle.y, 0.0);
+            let radius = circle.radius;
+            let angle = circle.direction;
 
             if chain.circle_chain.is_visible_circles {
                 gizmos.circle_2d(
                     transform.translation.truncate(),
                     radius,
-                    Color::rgb(0.1, 0.1, 0.9),
+                    Color::rgb(0.5, 0.5, 0.9),
                 );
             }
 
@@ -119,19 +141,19 @@ fn animate_circles(
                 gizmos.circle_2d(
                     transform.translation.truncate(),
                     center_radius,
-                    Color::rgb(0.9, 0.1, 0.1),
+                    Color::rgb(0.9, 0.5, 0.5),
                 );
             }
 
-            let index_x = circle.x as f32 + radius * angle.cos();
-            let index_y = circle.y as f32 + radius * angle.sin();
+            let index_x = circle.x + radius * angle.cos();
+            let index_y = circle.y + radius * angle.sin();
             transform.translation = Vec3::new(index_x, index_y, 0.0);
 
             if chain.circle_chain.is_visible_indizes {
-                let radius = circle.radius as f32;
-                let angle = circle.direction as f32;
-                let index_x = circle.x as f32 + radius * angle.cos();
-                let index_y = circle.y as f32 + radius * angle.sin();
+                let radius = circle.radius;
+                let angle = circle.direction;
+                let index_x = circle.x + radius * angle.cos();
+                let index_y = circle.y + radius * angle.sin();
                 transform.translation = Vec3::new(index_x, index_y, 0.0);
                 gizmos.circle_2d(
                     transform.translation.truncate(),
@@ -145,10 +167,10 @@ fn animate_circles(
                 let node_index = contour_node.center_node_index;
                 let index_angle = chain.circle_chain.circles[node_index].direction;
                 let rel_angle = contour_node.angle;
-                let angle = (index_angle + rel_angle) as f32;
-                let center_x = chain.circle_chain.circles[node_index].x as f32;
-                let center_y = chain.circle_chain.circles[node_index].y as f32;
-                let radius = chain.circle_chain.circles[node_index].radius as f32;
+                let angle = index_angle + rel_angle;
+                let center_x = chain.circle_chain.circles[node_index].x;
+                let center_y = chain.circle_chain.circles[node_index].y;
+                let radius = chain.circle_chain.circles[node_index].radius;
                 let x = center_x + radius * angle.cos();
                 let y = center_y + radius * angle.sin();
                 transform.translation = Vec3::new(x, y, 0.0);
