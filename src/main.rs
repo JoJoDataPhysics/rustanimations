@@ -7,10 +7,12 @@ extern crate rand;
 use bevy::prelude::*;
 use rand::Rng;
 
+use movements::attractor::get_seven_attractors;
 use shapes::circle::CircleChain;
 use shapes::combi_shapes::seven_chain;
 use shapes::countour::seven_node_contour;
 use shapes::polynomial::get_supporting_point;
+use testing::test_attractor::test_attractor;
 use testing::test_circle::{test_circle, test_circle_chain, test_contour};
 use testing::test_polynomial::test_polynomial;
 
@@ -19,7 +21,7 @@ fn main() {
     test_circle_chain();
     test_contour();
     test_polynomial();
-
+    test_attractor();
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
@@ -39,7 +41,7 @@ struct AnimatedChain {
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
     let mut rng = rand::thread_rng();
-    for _ in 0..10 {
+    for _ in 0..1 {
         let orbit_radius = rng.gen_range(150.0..300.0);
         let speed = rng.gen_range(1.0..3.0);
         let orbit_center = Vec2::new(rng.gen_range(-200.0..200.0), rng.gen_range(-200.0..200.0));
@@ -105,13 +107,26 @@ fn animate_circles(
                     contour_nodes[i],
                     contour_nodes[(i + 1) % num_nodes],
                     contour_nodes[(i + 2) % num_nodes],
-                    0.25,
+                    0.1,
                 ));
                 contour.push(get_supporting_point(
                     contour_nodes[i],
                     contour_nodes[(i + 1) % num_nodes],
                     contour_nodes[(i + 2) % num_nodes],
+                    0.25,
+                ));
+
+                contour.push(get_supporting_point(
+                    contour_nodes[i],
+                    contour_nodes[(i + 1) % num_nodes],
+                    contour_nodes[(i + 2) % num_nodes],
                     0.75,
+                ));
+                contour.push(get_supporting_point(
+                    contour_nodes[i],
+                    contour_nodes[(i + 1) % num_nodes],
+                    contour_nodes[(i + 2) % num_nodes],
+                    0.9,
                 ));
             }
 
