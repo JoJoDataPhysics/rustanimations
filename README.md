@@ -1,6 +1,6 @@
 # procedural animation of linked nodes
 <img src="https://github.com/JoJoDataPhysics/rustanimations/blob/main/Screenshot.png" alt="fishes" width="450"/>
-
+https://youtu.be/60OYUkKhGnU
 ## Project Overview
 
 This Rust project provides functionality for simulating and manipulating circular chains of nodes in a 2D space. Each circular node has properties like position, radius, and direction, and can be aligned with other nodes to create chains. The project is built using Rust's standard libraries along with the [Bevy game engine](https://bevyengine.org/) for rendering and animation, and the [rand crate](https://docs.rs/rand/latest/rand/) for generating random values. This simulation includes the ability to create circular chains, position and align nodes, and visualize them.
