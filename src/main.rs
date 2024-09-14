@@ -37,7 +37,7 @@ struct AnimatedChain {
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
-    for _ in 0..5 {
+    for _ in 0..9 {
         let particle = Particle::new();
         let attractor = Attractor::new(particle);
         let circle_chain = seven_chain();
