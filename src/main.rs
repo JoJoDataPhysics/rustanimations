@@ -5,9 +5,9 @@ mod testing;
 extern crate bevy;
 extern crate rand;
 use bevy::prelude::*;
-use rand::Rng;
 
-use movements::attractor::get_seven_attractors;
+use movements::attractor::Attractor;
+use movements::attractor::Particle;
 use shapes::circle::CircleChain;
 use shapes::combi_shapes::seven_chain;
 use shapes::countour::seven_node_contour;
@@ -31,29 +31,21 @@ fn main() {
 
 #[derive(Component)]
 struct AnimatedChain {
-    speed: f32,
-    orbit_radius: f32,
-    orbit_center: Vec2,
+    attractor: Attractor,
     circle_chain: CircleChain,
-    angle: f32,
 }
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
-    let mut rng = rand::thread_rng();
-    for _ in 0..1 {
-        let orbit_radius = rng.gen_range(150.0..300.0);
-        let speed = rng.gen_range(1.0..3.0);
-        let orbit_center = Vec2::new(rng.gen_range(-200.0..200.0), rng.gen_range(-200.0..200.0));
+    for _ in 0..5 {
+        let particle = Particle::new();
+        let attractor = Attractor::new(particle);
         let circle_chain = seven_chain();
 
         commands.spawn((
             AnimatedChain {
-                speed,
-                orbit_radius,
-                orbit_center,
+                attractor,
                 circle_chain,
-                angle: rng.gen_range(0.0..std::f32::consts::TAU),
             },
             SpatialBundle::default(),
         ));
@@ -61,16 +53,14 @@ fn setup(mut commands: Commands) {
 }
 
 fn animate_circles(
-    time: Res<Time>,
+    _time: Res<Time>,
     mut query: Query<(&mut Transform, &mut AnimatedChain)>,
     mut gizmos: Gizmos,
 ) {
     for (mut transform, mut chain) in &mut query {
-        chain.angle += chain.speed * time.delta_seconds();
-
-        let x = 1.5 * chain.orbit_center.x + chain.orbit_radius * chain.angle.cos();
-        let y = chain.orbit_center.y + chain.orbit_radius * chain.angle.sin();
-
+        chain.attractor.move_particle();
+        let x = chain.attractor.particle.position.x;
+        let y = chain.attractor.particle.position.y;
         chain.circle_chain.position_head(x, y);
         chain.circle_chain.allign_nodes();
         if chain.circle_chain.is_visible_sceleton {

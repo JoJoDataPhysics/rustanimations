@@ -76,11 +76,11 @@ impl CircleChain {
         CircleChain {
             distance: dist,
             circles: vec![head.clone()],
-            is_visible_circles: false,
-            is_visible_contour: true,
+            is_visible_circles: true,
+            is_visible_contour: false,
             is_visible_nodes: true,
             is_visible_contour_dots: false,
-            is_visible_indizes: false,
+            is_visible_indizes: true,
             is_visible_sceleton: true,
         }
     }
