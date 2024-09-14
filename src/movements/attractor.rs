@@ -39,15 +39,20 @@ impl Attractor {
         let dist = self.position - self.particle.position;
         let norm_dist = dist.normalize();
         let sum_dist = dist.x.abs() + dist.y.abs();
-        if sum_dist < 33.0 {
+        if sum_dist < 60.0 {
             self.position = random_position(400.0, 300.0);
             println!("New target: {:?}", self.position);
             return;
         }
-
+        let norm_velocity = self.particle.velocity.normalize();
         let acc =
             (force_factor * norm_dist - friction * self.particle.velocity) / self.particle.mass;
-        self.particle.velocity += acc;
+        let proj_acc = acc.dot(norm_velocity);
+        if proj_acc < 0.0 {
+            self.particle.velocity += acc - 0.8 * proj_acc * norm_velocity;
+        } else {
+            self.particle.velocity += acc;
+        }
         self.particle.position += self.particle.velocity;
     }
 }
