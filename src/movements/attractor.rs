@@ -1,3 +1,15 @@
+fish: Unknown command: fzf_key_bindings
+~/.config/fish/functions/fish_user_key_bindings.fish (line 1): 
+fzf_key_bindings
+^~~~~~~~~~~~~~~^
+from sourcing file ~/.config/fish/functions/fish_user_key_bindings.fish
+	called on line 1 of file ~/.local/share/omf/init.fish
+from sourcing file ~/.local/share/omf/init.fish
+	called on line 7 of file ~/.config/fish/conf.d/omf.fish
+from sourcing file ~/.config/fish/conf.d/omf.fish
+	called on line 248 of file /usr/share/fish/config.fish
+from sourcing file /usr/share/fish/config.fish
+	called during startup
 use crate::Vec2;
 use rand::Rng;
 
@@ -49,6 +61,7 @@ impl Attractor {
             (force_factor * norm_dist - friction * self.particle.velocity) / self.particle.mass;
         let proj_acc = acc.dot(norm_velocity);
         if proj_acc < 0.0 {
+            // damp (breaking) acceleration oposite to the direction of the velocity
             self.particle.velocity += acc - 0.8 * proj_acc * norm_velocity;
         } else {
             self.particle.velocity += acc;
