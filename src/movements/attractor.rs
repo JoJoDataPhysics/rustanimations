@@ -49,6 +49,7 @@ impl Attractor {
             (force_factor * norm_dist - friction * self.particle.velocity) / self.particle.mass;
         let proj_acc = acc.dot(norm_velocity);
         if proj_acc < 0.0 {
+            // damp (breaking) acceleration oposite to the direction of the velocity
             self.particle.velocity += acc - 0.8 * proj_acc * norm_velocity;
         } else {
             self.particle.velocity += acc;
