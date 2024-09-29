@@ -16,7 +16,7 @@ pub struct Particle {
 
 impl Particle {
     pub fn new() -> Self {
-        let position = Vec2::new(0.0, 0.0); //random_position(800.0, 600.0);
+        let position = Vec2::new(0.0, 0.0);
         let velocity = Vec2::new(0.0, 0.0);
         let mass = 1.0;
         Particle {
