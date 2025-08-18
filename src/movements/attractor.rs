@@ -1,4 +1,4 @@
-use crate::Vec2;
+use bevy::math::Vec2;
 use rand::Rng;
 
 #[derive(Debug)]
@@ -7,11 +7,16 @@ pub struct Attractor {
     pub particle: Particle,
 }
 #[derive(Debug, Clone, Copy)]
-
 pub struct Particle {
     pub position: Vec2,
     pub velocity: Vec2,
     mass: f32,
+}
+
+impl Default for Particle {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Particle {
@@ -44,13 +49,18 @@ impl Attractor {
             println!("New target: {:?}", self.position);
             return;
         }
-        let norm_velocity = self.particle.velocity.normalize();
         let acc =
             (force_factor * norm_dist - friction * self.particle.velocity) / self.particle.mass;
-        let proj_acc = acc.dot(norm_velocity);
-        if proj_acc < 0.0 {
-            // damp (breaking) acceleration oposite to the direction of the velocity
-            self.particle.velocity += acc - 0.8 * proj_acc * norm_velocity;
+
+        if self.particle.velocity.length() > 0.01 {
+            let norm_velocity = self.particle.velocity.normalize();
+            let proj_acc = acc.dot(norm_velocity);
+            if proj_acc < 0.0 {
+                // damp (breaking) acceleration opposite to the direction of the velocity
+                self.particle.velocity += acc - 0.8 * proj_acc * norm_velocity;
+            } else {
+                self.particle.velocity += acc;
+            }
         } else {
             self.particle.velocity += acc;
         }
@@ -63,8 +73,8 @@ fn random_position(screen_width: f32, screen_height: f32) -> Vec2 {
     let mut rng = rand::thread_rng();
 
     // Generate random values for x and y within the screen bounds
-    let x = rng.gen_range(-1.0 * screen_width..screen_width);
-    let y = rng.gen_range(-1.0 * screen_height..screen_height);
+    let x = rng.gen_range(-screen_width..screen_width);
+    let y = rng.gen_range(-screen_height..screen_height);
 
     Vec2::new(x, y)
 }
